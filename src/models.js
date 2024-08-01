@@ -3,7 +3,7 @@ const db = require('../util/db')
 
 async function findGasType(key, gasType) {
   try {
-    const query = `SELECT * FROM info_gastype WHERE sensor_index = ? AND gas_code = ?`
+    const query = `SELECT * FROM info_gas WHERE sensor_index = ? AND gas_code = ?`
     const results = await db.query(query, [key, gasType])
 
     return results[0][0]
@@ -15,16 +15,15 @@ async function findGasType(key, gasType) {
 async function insertRawData(data) {
   try {
     const query = `
-      INSERT INTO log_gas (
-          record_time, device_index, sensor_index, ts_index, 
+      INSERT INTO sensor_log (
+          record_time, device_index, sensor_index, 
           o2_value, h2s_value, co_value, voc_value, comb_value) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `
     const values = [
       data.record_time,
       data.device_index,
       data.sensor_index,
-      data.ts_index,
       data.value.O2,
       data.value.H2S,
       data.value.CO,
@@ -83,7 +82,7 @@ async function updateInfoSensor(data) {
 
 async function releaseAlarm(data) {
   try {
-    const query = `UPDATE log_gas_alarm_with_warn
+    const query = `UPDATE sensor_log_alarm_with_warn
     SET 
       restore_time = ?, 
       dan_restore_time = COALESCE(?, dan_restore_time), 
@@ -110,7 +109,7 @@ async function releaseAlarm(data) {
 
 async function startAlarm(data) {
   try {
-    const query = `INSERT INTO log_gas_alarm_with_warn
+    const query = `INSERT INTO sensor_log_alarm_with_warn
       (
         record_time, 
         dan_record_time, 
@@ -136,7 +135,7 @@ async function startAlarm(data) {
 
 async function updateAlarm(data) {
   try {
-    const query = `UPDATE log_gas_alarm_with_warn
+    const query = `UPDATE sensor_log_alarm_with_warn
     SET 
       dan_record_time = COALESCE(?, dan_record_time),
       warn_record_time = COALESCE(?, warn_record_time)
@@ -232,7 +231,7 @@ async function findLocal(index) {
 async function findGasTypeNormalRange(key, gasType) {
   try {
     // eslint-disable-next-line max-len
-    const query = `SELECT normal_from, normal_to, gas_unit FROM info_gastype WHERE sensor_index = ? AND gas_code = ?`
+    const query = `SELECT normal_from, normal_to, gas_unit FROM info_gas WHERE sensor_index = ? AND gas_code = ?`
     const results = await db.query(query, [key, gasType])
 
     return results[0]

@@ -22,7 +22,6 @@ const checkState = require('../lib/checkState')
 const { initGasState, getGasState, setGasState } = require('./cacheState')
 const { handleOddState } = require('./handleOddState')
 const { handleOddStateTimer } = require('./handleOddStateTimer')
-const SITE_INDEX = process.env.SITE_INDEX
 // for mock test
 // myEmitter.on('message', (message) => {
 //   receiver(message)
@@ -33,7 +32,6 @@ module.exports = async function receiver(parsedBody) {
   const data = parsedBody[0]
 
   data.record_time = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
-  data.ts_index = SITE_INDEX
 
   // add raw data to db
   await insertRawData(data)
