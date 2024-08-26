@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const receiver = require('./src/receiver')
 
 require('dotenv').config()
-require('./src/sendGasLog')
 
 const app = express()
 
@@ -17,8 +16,13 @@ app.get('/', (req, res) => {
 })
 
 app.post('/receive/status/iaq700', async (req, res) => {
-  await receiver(req.body)
-  res.end()
+  try {
+    await receiver(req.body)
+    res.status(200).end()
+  } catch (error) {
+    console.error('Error receiving status:', error)
+    res.status(500).send('Internal Server Error')
+  }
 })
 
 app.use((req, res) => {
