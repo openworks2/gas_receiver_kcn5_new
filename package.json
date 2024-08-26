@@ -1,14 +1,9 @@
 {
-  "name": "cloud_gas_server",
+  "name": "gas_receiver_kcn5",
   "version": "0.1.0",
-  "bin": {
-    "cloud_gas_server": "bin/cloud_gas_server.js"
-  },
   "scripts": {
     "start": "node app.js",
-    "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
-    "cdk": "cdk",
-    "test": "jest",
+    "dist": "pm2 start app.js --name GAS_RECEIVER_KCN5(9150) --log-date-format \"YYYY-MM-DD HH:mm:ss\"",
     "prepare": "husky install"
   },
   "devDependencies": {
