@@ -1,7 +1,7 @@
 'use strict'
 
 const moment = require('moment-timezone')
-const { updateInfoSensor } = require('../src/models')
+const { updateInfoSensor, insertRawData } = require('../src/models')
 const checkState = require('../lib/checkState')
 
 module.exports = async function receiver(parsedBody) {
@@ -24,4 +24,5 @@ module.exports = async function receiver(parsedBody) {
   }
 
   await updateInfoSensor(gasInfo)
+  await insertRawData(gasInfo)
 }
